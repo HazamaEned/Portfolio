@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Benedict Juson – Minecraft Server QA Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/qa.css">
+</head>
+<body>
+<main>
+<header>
+<a class="back-link" href="index.html">← Back to portfolio</a>
+<p class="meta">QA portfolio · Self-hosted modded Minecraft server</p>
+<h1>Benedict Juson</h1>
+<p class="lead">4th-year BSIT student. I self-host a modded Minecraft server running the Cozy Lunchtime modpack, test it like a product, and fix what breaks. This page shows the bugs I found, how I traced them, and what fixed them.</p>
+<p>Contact: <a href="mailto:benedictjuson614@gmail.com">benedictjuson614@gmail.com</a> · <a href="https://www.linkedin.com/in/christian-benedict-juson-0998a8422/" target="_blank" rel="noopener">LinkedIn</a> · Metro Manila, Philippines</p>
+</header>
+
+
+
+<h2>The project</h2>
+<div class="box"><dl>
+<dt>System under test</dt><dd>Self-hosted modded Minecraft server running the Cozy Lunchtime modpack.</dd>
+<dt>Setup</dt><dd>Minecraft 1.20.1 with Forge, Cozy Lunchtime modpack 1.20.1, hosted on a Windows 11 machine.</dd>
+<dt>Players</dt><dd>10 players. Clients connect from the Mojang launcher, Legacy Launcher, and TLauncher.</dd>
+<dt>My role</dt><dd>Admin and tester: I install updates, reproduce player problems, find the cause, fix it, and check the fix.</dd>
+</dl></div>
+
+<h2>Skills shown</h2>
+<ul class="skills">
+<li>Bug reporting</li><li>Root cause analysis</li><li>Client and server compatibility testing</li><li>Network and connectivity troubleshooting</li><li>Reading server and client logs</li><li>Regression testing</li><li>Config and mod management</li><li>Performance testing</li><li>Test planning</li></ul>
+
+<h2>Bugs found and fixed</h2>
+<p class="meta">Select a report to open it.</p>
+
+<details class="ticket" data-sev="High" open><summary><span class="id">MC-001</span><span class="sev">High</span><span class="t">Players cannot connect to Simple Voice Chat</span></summary><div class="body">
+<p class="meta">Minecraft 1.20.1 Forge · Simple Voice Chat · Status: Fixed</p>
+<h4>Steps to reproduce</h4>
+<ol><li>Start the server and join with the modpack client.</li><li>Join from a player machine outside my local network.</li><li>Check the voice chat status in game.</li></ol>
+<h4>Expected</h4><p>Players join the game and can talk to each other by voice.</p>
+<h4>Actual</h4><p>Players could join the game but voice chat did not connect. The server log showed: “Port Failed to Connect to Simple Voice Chat”.</p>
+<h4>Root cause</h4><p>Voice chat uses its own network port, separate from the main game connection. Players could reach the game through the server’s tunnel but could not reach the voice chat port, so they could play but not talk.</p>
+<h4>Fix</h4><p>Created a separate Playit.gg tunnel just for the voice chat port, alongside the Minecraft server tunnel, and changed the host address in the Simple Voice Chat config to the tunnel’s address so players connect through it. The port number is left out on purpose.</p>
+<h4>Verification</h4><p>Players on the server tested voice chat after the change.</p>
+</div></details>
+
+<details class="ticket" data-sev="High"><summary><span class="id">MC-002</span><span class="sev">High</span><span class="t">Client and server files do not match, causing a join failure</span></summary><div class="body">
+<p class="meta">Modpack: Cozy Lunchtime 1.20.1 · Status: Fixed</p>
+<h4>Steps to reproduce</h4>
+<ol><li>Install the modpack on the client.</li><li>Try to join the server.</li></ol>
+<h4>Expected</h4><p>The client joins with no errors.</p>
+<h4>Actual</h4><p>The connection was refused because the client and server game files did not match. The log said Field Guide 1.20.1 was not up to date with Field Guide 1.20.1, so the two copies were out of sync.</p>
+<h4>Root cause</h4><p>The Field Guide config did not match what the server expected. The EXP values did not exist in the config and the lens craftable setting was false, so the two sides disagreed.</p>
+<h4>Fix</h4><p>Edited fieldguide1.20.1.config so it matched the server:</p><ul><li>Changed “lens craftable” from false to true.</li><li>Added the Field Guide EXP values, which did not exist before, to match the server’s EXP levels for a different mod: Exploring New Terrain 20, Discovering New Mobs 5, Discovering New Plants 2.</li></ul>
+<h4>Verification</h4><p>After the change, players joined without issues.</p>
+</div></details>
+
+<details class="ticket" data-sev="Medium"><summary><span class="id">MC-003</span><span class="sev">Medium</span><span class="t">Server falls behind when one player explores new terrain</span></summary><div class="body">
+<p class="meta">Cozy Lunchtime 1.20.1 with Create · Status: Partly mitigated, still happens at times</p>
+<h4>Steps to reproduce</h4>
+<ol><li>One player travels far from spawn into terrain nobody has explored.</li><li>Watch the server’s TPS and log while they travel.</li></ol>
+<h4>Expected</h4><p>TPS stays near 20.</p>
+<h4>Actual</h4><p>In one case a player explored about 7,000 blocks and the server fell about 10 ticks behind. The log says the server can’t keep up: about 10 ticks behind, 530 ms.</p>
+<h4>Notes</h4><p>The lag appears when chunks are being loaded for the explorer, and Create adds to the server load. It does not appear with several players online who are not exploring.</p><h4>Mitigation tried</h4><p>Lowered the server’s RAM allocation from 11 GB to 8 GB to leave more room for the rest of the machine. The server now lags less but still falls behind from time to time.</p>
+</div></details>
+
+<h2>Test plan for the server</h2>
+<p class="meta">What I check before and after every update.</p>
+<div class="box"><dl>
+<dt>Scope</dt><dd>Joining, voice chat, mod compatibility, world save and restart, server performance, and updates to the modpack.</dd>
+<dt>Smoke test</dt><dd>Server starts with no errors in the log, a client joins, and voice chat connects.</dd>
+<dt>Regression</dt><dd>Re-run all test cases below after any mod, modpack, or config change.</dd>
+<dt>Exploratory</dt><dd>Play for 30 to 45 minutes trying odd inputs, such as relogging fast, crossing chunk borders, and using many mod items at once.</dd>
+<dt>Exit criteria</dt><dd>No open High bugs and all test cases run on the current version.</dd>
+<dt>Severity</dt><dd>High: players cannot join or a core feature fails. Medium: a feature fails but there is a workaround. Low: cosmetic.</dd>
+</dl></div>
+
+<h2>Test cases</h2>
+<div class="tw"><table>
+<thead><tr><th>ID</th><th>Test case</th><th>Steps</th><th>Expected result</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>TC-01</td><td>Join from outside the network</td><td>Join from a different network than the server</td><td>Joins with no mismatch error</td><td class="pass">Fixed (MC-002)</td></tr>
+<tr><td>TC-02</td><td>Voice chat connects</td><td>Two players join and speak</td><td>Both hear each other</td><td class="pass">Fixed (MC-001)</td></tr>
+<tr><td>TC-03</td><td>Clean startup</td><td>Start server, read the log</td><td>No errors or missing mod warnings</td><td class="pass">Pass</td></tr>
+<tr><td>TC-04</td><td>Save survives restart</td><td>Build something, stop and start the server</td><td>Build and inventory unchanged</td><td class="pass">Pass</td></tr>
+<tr><td>TC-05</td><td>Rejoin quickly</td><td>Disconnect and rejoin 5 times</td><td>No crash, no duplicate items</td><td class="pass">Pass</td></tr>
+<tr><td>TC-06</td><td>Performance with several players</td><td>Check TPS with several players online, and with one player exploring new terrain</td><td>TPS stays near 20</td><td class="fail">Lags when one player explores (MC-003)</td></tr>
+<tr><td>TC-07</td><td>Update regression</td><td>Update the mods and re-run TC-01 to TC-06</td><td>All pass</td><td class="pass">Mods all updated; only TC-06 lag remains</td></tr>
+</tbody></table></div>
+
+<h2>What I learned</h2>
+<p>Both bugs looked like “the server is broken” to players but had different causes: one in the network path and one in file versions. Reading the logs and changing one thing at a time found each cause faster than guessing. I now compare client and server versions before anything else when a join fails.</p>
+<p>The lag only showed up when a single player explored new terrain, so I now test with one player exploring as well as several players online. Checking one scenario was not enough to call performance fine.</p>
+<a class="back-link back-link-bottom" href="index.html">← Back to portfolio</a>
+</main>
+</body>
+</html>

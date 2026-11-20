@@ -1,0 +1,244 @@
+@media (min-width: 1441px) {
+  .page-wrap,
+  .section-wrap {
+    padding-right: 173px;
+    padding-left: 173px;
+  }
+
+  .hero-bottom {
+    right: 173px;
+    left: 173px;
+  }
+}
+
+@media (max-width: 800px) {
+  .site-header {
+    padding: 0 6%;
+  }
+
+  .site-nav {
+    gap: 20px;
+  }
+
+  .page-wrap,
+  .section-wrap {
+    padding-right: 7%;
+    padding-left: 7%;
+  }
+
+  .hero {
+    grid-template-columns: 1.1fr .9fr;
+    min-height: 580px;
+  }
+
+  .hero-aside {
+    gap: 12px;
+  }
+
+  .hero-photo {
+    width: clamp(150px, 20vw, 190px);
+  }
+
+  .aside-caption {
+    max-width: 105px;
+    font-size: 10px;
+  }
+
+  .hero-bottom {
+    right: 7%;
+    left: 7%;
+  }
+
+  .project-card {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .project-visual {
+    min-height: 320px;
+  }
+
+  .project-info {
+    padding: 26px 7%;
+  }
+
+  .testing-section {
+    gap: 5%;
+  }
+
+  .testing-label {
+    font-size: 7px;
+  }
+}
+
+@media (max-width: 600px) {
+  html {
+    scroll-padding-top: 65px;
+  }
+
+  .site-header {
+    height: 67px;
+  }
+
+  .wordmark {
+    font-size: 9px;
+  }
+
+  .site-nav {
+    gap: 15px;
+    font-size: 10px;
+  }
+
+  .site-nav > a:first-child {
+    display: none;
+  }
+
+  .site-nav .nav-cta {
+    padding: 9px 10px;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 27px;
+    min-height: 0;
+    padding-top: 65px;
+    padding-bottom: 76px;
+  }
+
+  .hero-copy {
+    padding: 0;
+  }
+
+  .hero-aside {
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: 205px;
+    overflow: visible;
+    padding: 0;
+  }
+
+  .hero-monogram {
+    font-size: 145px;
+  }
+
+  .orbit {
+    width: 170px;
+    height: 170px;
+  }
+
+  .orbit-two {
+    width: 220px;
+    height: 220px;
+  }
+
+  .aside-caption {
+    max-width: 120px;
+  }
+
+  .hero-index {
+    top: 0;
+    right: 2%;
+  }
+
+  .hero-photo {
+    width: 150px;
+  }
+
+  .hero-bottom {
+    right: 7%;
+    left: 7%;
+    font-size: 7px;
+  }
+
+  .hero-bottom span:first-child {
+    max-width: 195px;
+    line-height: 1.8;
+  }
+
+  .section-wrap {
+    padding-top: 82px;
+    padding-bottom: 75px;
+  }
+
+  .section-heading {
+    align-items: start;
+    flex-direction: column;
+    gap: 17px;
+  }
+
+  .section-note {
+    max-width: 300px;
+  }
+
+  .project-card {
+    grid-template-columns: 1fr;
+  }
+
+  .project-card:nth-of-type(odd) .project-visual {
+    order: 0;
+  }
+
+  .project-visual {
+    min-height: 260px;
+  }
+
+  .project-info {
+    padding: 26px 7% 29px;
+  }
+
+  .project-meta {
+    font-size: 7px;
+  }
+
+  .project-info h3 {
+    margin-top: 16px;
+    font-size: 31px;
+  }
+
+  .testing-section {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+
+  .testing-item {
+    grid-template-columns: 27px 1fr;
+    gap: 10px;
+    min-height: 77px;
+  }
+
+  .testing-label {
+    grid-column: 2;
+    margin-top: -20px;
+  }
+
+  .testing-name {
+    font-size: 16px;
+  }
+
+  .site-footer {
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 22px 6%;
+  }
+
+  .site-footer > span {
+    display: none;
+  }
+
+  .back-top {
+    font-size: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
